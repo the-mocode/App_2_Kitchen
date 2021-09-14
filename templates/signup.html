@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    <h3>Sign Up</h3>
+
+    <form action="/signup_action" method="POST">
+        Email: <input type="text" name="email"><br>
+        Name: <input type="text" name="name"><br>
+        Password: <input type="password" name="password"><br>
+        <input type="submit" value="Register">
+    </form>
+
+    {% if checkD == True %}
+        <h3>An account already exists under this email</h3>
+    {% endif %}
+    
+{% endblock%}
