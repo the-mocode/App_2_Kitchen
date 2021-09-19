@@ -1,4 +1,6 @@
+from db import sql_select, sql_write
 from flask import Flask, request, render_template, redirect, session
+import requests
 import psycopg2
 import bcrypt
 
@@ -6,30 +8,30 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = 'abcd'
 
 @app.route('/')
+def home():
+    response = requests.get('https://www.themealdb.com/api/json/v1/1/categories.php/')
+    data = response.json()
+    print(data)
+    categ = data['categories']
+    return render_template('home.html', categ=categ)
+
+
+
+@app.route('/login')
 def login():
     name = request.args.get('name')
-    email = request.args.get('email')
-
-    conn = psycopg2.connect("dbname=app2kitchen")
-    cur = conn.cursor()
-    cur.execute("SELECT * FROM users WHERE name = (%s)", [name])
-    conn.commit()
-    conn.close()
     return render_template('login.html', name=name)
 
-@app.route('/login', methods=["POST"])
+@app.route('/login_action', methods=["POST"])
 def login_action():
 
     name = request.form.get('name')
     email = request.form.get('email')
-
-    conn = psycopg2.connect("dbname=app2kitchen")
-    cur = conn.cursor()
-    cur.execute("SELECT * FROM users WHERE email = %s", [email])
-    conn.commit()
-    data = cur.fetchall()
-    print(data)
-    conn.close()
+    password = request.form.get('password')
+    # need to get login to accept password first 
+    data1 = sql_select("SELECT * FROM users WHERE email = %s", [email])
+    print(data1)
+    return redirect('/login')
 
 @app.route('/signup')
 def signup():
@@ -43,13 +45,8 @@ def signup_action():
     print(email, name, password)
     password_hash = bcrypt.hashpw(password.encode(), bcrypt.gensalt()).decode()
 
-    conn = psycopg2.connect("dbname=app2kitchen")
-    cur = conn.cursor()
-    cur.execute("SELECT * FROM users WHERE email = %s", [email])
-    conn.commit()
-    data = cur.fetchall()
+    data = sql_select("SELECT * FROM users WHERE email = %s", [email])
     print(data)
-    conn.close()
     
     if len(data) > 0:
         checkD = True
@@ -57,12 +54,8 @@ def signup_action():
         return redirect('/signup')
     else:
         checkD = False
-        conn = psycopg2.connect("dbname=app2kitchen")
-        cur = conn.cursor()
-        cur.execute("INSERT INTO users (email, name, password_hash) VALUES (%s, %s, %s)",[email, name, password_hash]) 
-        conn.commit()
-        conn.close()
-        return redirect('/')
+        sql_write("INSERT INTO users (email, name, password_hash) VALUES (%s, %s, %s)",[email, name, password_hash])
+        return redirect('/login')
 
 
 app.run(debug=True)
