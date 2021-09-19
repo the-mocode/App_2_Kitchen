@@ -1,16 +1,13 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    <h1>App 2 Kitchen</h1>
-    <h3>{{ categ[1].strCategory }}</h3>
-    <p>{{ categ[1].strCategoryDescription }}</p>
-    <img src=" {{ categ[1].strCategoryThumb }}">
+{% extends "base.html" %}
 
-</body>
-</html>
+{% block content %}
+
+    <h1>App 2 Kitchen</h1>
+
+    {% for results in categ %}
+        <a href="/login"> <h3>{{ results.strCategory }}</h3> </a>
+        <p>{{ results.strCategoryDescription }}</p>
+        <img src=" {{ results.strCategoryThumb }}">
+    {% endfor %}
+
+{% endblock content %}
