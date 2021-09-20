@@ -2,12 +2,17 @@
 
 {% block content %}
 
-    <h1>App 2 Kitchen</h1>
-
-    {% for results in categ %}
-        <a href="/login"> <h3>{{ results.strCategory }}</h3> </a>
-        <p>{{ results.strCategoryDescription }}</p>
-        <img src=" {{ results.strCategoryThumb }}">
-    {% endfor %}
+    
+        {% for results in categ %}
+                <a href="/meals"> <div class="categories">
+                <h3>{{ results.strCategory }}</h3> 
+                <img class="catImage" src=" {{ results.strCategoryThumb }}">
+                <div class="catDescript">
+                    <p>{{ results.strCategoryDescription }}</p>
+                </div>
+                
+            </div></a>
+        {% endfor %}
+    
 
 {% endblock content %}

@@ -15,14 +15,14 @@ def home():
     categ = data['categories']
     return render_template('home.html', categ=categ)
 
-@app.route('/categorie')
+@app.route('/meals')
 def categ_action():
-    categ_type = request.get.args()
-    response = requests.get(f'https://www.themealdb.com/api/json/v1/1/filter.php?c={categ_type}')
+    # categ_type = request.get.args("catDescript")
+    response = requests.get(f'https://www.themealdb.com/api/json/v1/1/filter.php?c=Seafood')
     data = response.json()
     print(data)
     categ_type = data['meals']
-    return render_template('home.html', categ=categ)
+    return render_template('meals.html', categ_type=categ_type)
 
 
 

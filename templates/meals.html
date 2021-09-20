@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+
+    {% for meal in categ_type %}
+        <a href="/recipe"> <div class="meals">
+            <img class="meal_img" src=" {{ meal.strMealThumb }}">
+            <h3 class="meal_name">{{ meal.strMeal }}</h3> 
+         </div></a>  
+    {% endfor %}
+
+{% endblock content %}
