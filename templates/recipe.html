@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+
+    <div class="recipe">
+        <h3 class="recipe_name">{{ meal.strMeal }}</h3> 
+        <img class="recipe_img" src=" {{ meal.strMealThumb }}">
+        <p>{{ meal.strInstructions }}</p>
+        
+        
+    </div>
+
+{% endblock content %}

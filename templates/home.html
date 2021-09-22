@@ -4,7 +4,7 @@
 
     
         {% for results in categ %}
-                <a href="/meals"> <div class="categories">
+                <a href="/meals/{{ results.strCategory }}"> <div class="categories">
                 <h3>{{ results.strCategory }}</h3> 
                 <img class="catImage" src=" {{ results.strCategoryThumb }}">
                 <div class="catDescript">

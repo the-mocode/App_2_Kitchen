@@ -15,15 +15,20 @@ def home():
     categ = data['categories']
     return render_template('home.html', categ=categ)
 
-@app.route('/meals')
-def categ_action():
-    # categ_type = request.get.args("catDescript")
-    response = requests.get(f'https://www.themealdb.com/api/json/v1/1/filter.php?c=Seafood')
+@app.route('/meals/<category>')
+def categ_action(category):
+    response = requests.get(f'https://www.themealdb.com/api/json/v1/1/filter.php?c={category}')
     data = response.json()
-    print(data)
     categ_type = data['meals']
     return render_template('meals.html', categ_type=categ_type)
 
+@app.route('/recipe/<meal_id>')
+def recipe(meal_id):
+    # categ_type = request.get.args("catDescript")
+    response = requests.get(f'https://www.themealdb.com/api/json/v1/1/lookup.php?i={meal_id}')
+    data = response.json()
+    meal = data['meals'][0]
+    return render_template('recipe.html', meal=meal)
 
 
 @app.route('/login')
@@ -39,7 +44,6 @@ def login_action():
     password = request.form.get('password')
     # need to get login to accept password first 
     data1 = sql_select("SELECT * FROM users WHERE email = %s", [email])
-    print(data1)
     return redirect('/login')
 
 @app.route('/signup')

@@ -4,9 +4,10 @@
 
 
     {% for meal in categ_type %}
-        <a href="/recipe"> <div class="meals">
+        <a href="/recipe/{{ meal.idMeal }}"> <div class="meals">
             <img class="meal_img" src=" {{ meal.strMealThumb }}">
             <h3 class="meal_name">{{ meal.strMeal }}</h3> 
+            <p hidden>meal.idMeal</p>
          </div></a>  
     {% endfor %}
 
