@@ -44,7 +44,7 @@ def login_action():
     password = request.form.get('password')
     # need to get login to accept password first 
     data1 = sql_select("SELECT * FROM users WHERE email = %s", [email])
-    return redirect('/login')
+    return redirect('/')
 
 @app.route('/signup')
 def signup():
