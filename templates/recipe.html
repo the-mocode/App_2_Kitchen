@@ -8,7 +8,17 @@
         <img class="recipe_img" src=" {{ meal.strMealThumb }}">
         <p>{{ meal.strInstructions }}</p>
         
-        
     </div>
 
+    <div>
+        <form action="/favourites" method="POST">
+            <input type="hidden" name="mealfav" value="{{ meal.strMeal }}">
+            <button type="submit">Favourite</button>
+
+
+        </form>
+
+
+
+    </div>
 {% endblock content %}
