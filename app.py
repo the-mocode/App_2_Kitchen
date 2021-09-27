@@ -3,10 +3,13 @@ from flask import Flask, request, render_template, redirect, session
 import requests
 import psycopg2
 import bcrypt
+import environ
 from models.fav import user_id
 
+env = environ.ENV( DEBUG=(bool, False))
+
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'abcd'
+app.config['SECRET_KEY'] = env('SECRET_KEY')
 
 @app.route('/')
 def home():
