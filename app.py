@@ -3,13 +3,12 @@ from flask import Flask, request, render_template, redirect, session
 import requests
 import psycopg2
 import bcrypt
-import environ
+import os
 from models.fav import user_id
 
-env = environ.ENV( DEBUG=(bool, False))
-
+SECRET_KEY = os.environ.get('SECRET_KEY', 'testkey')
 app = Flask(__name__)
-app.config['SECRET_KEY'] = env('SECRET_KEY')
+app.config['SECRET_KEY'] = SECRET_KEY
 
 @app.route('/')
 def home():
@@ -53,12 +52,20 @@ def login_action():
     name = request.form.get('name')
     email = request.form.get('email')
     password = request.form.get('password')
+    session['email'] = email
     # need to get login to accept password first 
-    print(email)
-    print(type(email))
-    print(user_id(email))
+    
     data1 = sql_select("SELECT * FROM users WHERE email = %s", [email])
+    user_id = data1[0][0]
+    session['user_id'] = user_id
     return redirect('/')
+
+@app.route('/logout')
+def logout():
+    session.clear()
+    return redirect('/')
+
+
 
 @app.route('/signup')
 def signup():
@@ -85,4 +92,21 @@ def signup_action():
         return redirect('/login')
 
 
-app.run(debug=True)
+@app.route('/favourites_action', methods=['POST'])
+def user_id():
+    user_id1 = session['user_id']
+    mealid = request.form.get('mealid')
+    print
+    sql_write("INSERT INTO favourites (user_id, recipe_id) VALUES (%s, %s)", [user_id1, mealid])
+    # sql_select("SELECT * FROM users WHERE email = %s", [email])
+    return redirect(f'/recipe/{mealid}')
+
+if __name__ == "__main__":
+    app.run(debug=True)
+
+
+
+
+#  get food id from form - get email from session  - get user id using email - insert new fav entry - redirect user
+
+

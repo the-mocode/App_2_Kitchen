@@ -10,15 +10,13 @@
         
     </div>
 
-    <div>
-        <form action="/favourites" method="POST">
-            <input type="hidden" name="mealfav" value="{{ meal.strMeal }}">
-            <button type="submit">Favourite</button>
+    {% if session['email'] %}
+        <div>
+            <form action="/favourites_action" method="POST">
+                <input type="hidden" name="mealfav" value="{{ meal.strMeal }}">
+                <button type="submit" name="mealid" value="{{ meal.idMeal }}">Favourite</button>
+            </form>
+        </div>
+    {% endif %}
 
-
-        </form>
-
-
-
-    </div>
 {% endblock content %}
