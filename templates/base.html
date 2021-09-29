@@ -16,6 +16,7 @@
     <ul class="navbar">
         <li><a href="/">Home</a></li>
         {% if session['email'] %}
+            <li><a href="/favourites">Favourite Recipes</a></li>
             <li><a href="/logout">Logout</a></li>
         {% else %}
             <li><a href="/login">Login</a></li>

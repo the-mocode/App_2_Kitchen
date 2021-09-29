@@ -5,6 +5,7 @@ import psycopg2
 import bcrypt
 import os
 from models.fav import user_id
+import json
 
 SECRET_KEY = os.environ.get('SECRET_KEY', 'testkey')
 app = Flask(__name__)
@@ -27,24 +28,16 @@ def categ_action(category):
 
 @app.route('/recipe/<meal_id>')
 def recipe(meal_id):
-    # categ_type = request.get.args("catDescript")
     response = requests.get(f'https://www.themealdb.com/api/json/v1/1/lookup.php?i={meal_id}')
     data = response.json()
     meal = data['meals'][0]
     return render_template('recipe.html', meal=meal)
 
-@app.route('/favourites', methods=["POST"])
-def fav_action():
-    meal_name = request.form.get('mealfav')
-    # print(meal_name)
-    print(request.referrer)
-    return redirect(request.referrer)
-
-
 @app.route('/login')
 def login():
     name = request.args.get('name')
     return render_template('login.html', name=name)
+
 
 @app.route('/login_action', methods=["POST"])
 def login_action():
@@ -56,9 +49,15 @@ def login_action():
     # need to get login to accept password first 
     
     data1 = sql_select("SELECT * FROM users WHERE email = %s", [email])
-    user_id = data1[0][0]
-    session['user_id'] = user_id
-    return redirect('/')
+    is_valid = bcrypt.checkpw(password.encode(), data1[0][3].encode())
+    if is_valid:
+        user_id = data1[0][0]
+        session['user_id'] = user_id
+        return redirect('/')
+    else:
+        print('invalid password or username, please try again')
+        return redirect('/login')
+
 
 @app.route('/logout')
 def logout():
@@ -92,14 +91,40 @@ def signup_action():
         return redirect('/login')
 
 
+@app.route('/favourites')
+def favourites_list():
+
+    user_id1 = session['user_id']
+    meal_ids = sql_select("SELECT * FROM favourites WHERE user_id = %s", [user_id1])
+    
+    favourite_meals = []
+    for ids in meal_ids:
+        response = requests.get(f'https://www.themealdb.com/api/json/v1/1/lookup.php?i={ids[2]}')
+        response_object = json.loads(response.text)
+        for item in response_object["meals"]:
+            meal = {
+                'idMeal' : item['idMeal'],
+                'strMeal' : item['strMeal'],
+                'strMealThumb' : item['strMealThumb']
+            }
+            favourite_meals.append(meal)
+   
+    return render_template('favourites.html', favourite_meals=favourite_meals)
+
 @app.route('/favourites_action', methods=['POST'])
-def user_id():
+def favourite():
     user_id1 = session['user_id']
     mealid = request.form.get('mealid')
-    print
     sql_write("INSERT INTO favourites (user_id, recipe_id) VALUES (%s, %s)", [user_id1, mealid])
-    # sql_select("SELECT * FROM users WHERE email = %s", [email])
     return redirect(f'/recipe/{mealid}')
+
+@app.route('/unfavourites_action', methods=['POST'])
+def unfavourite():
+    user_id1 = session['user_id']
+    mealid = request.form.get('mealid')
+    sql_write("DELETE FROM favourites WHERE user_id=%s AND recipe_id=%s", [user_id1, mealid])
+    return redirect('/favourites')
+
 
 if __name__ == "__main__":
     app.run(debug=True)

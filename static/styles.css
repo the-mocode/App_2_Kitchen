@@ -9,12 +9,24 @@ body{
 
 .navbar {
 
-    list-style-type: none;
+    display: flex;
+    justify-content: center;
     
-    padding: 0;
-    display: block;
 }
+.navbar a {
+    margin: 10px;
+    border-radius: 2px;
+    background: lightgray;
+    color: black;
+    display: block;
+    padding: 15px;
+    text-decoration: none;
+  }
 
+ul {
+    list-style-type: none;
+    font-family: 'Poiret One', cursive;
+}
 .categories {
     display: inline-block;
     width: 400px;

@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+
+    {% for meals in favourite_meals %}
+        <a href="/recipe/{{ meals.idMeal }}"> <div class="meals">
+            <img class="meal_img" src=" {{ meals.strMealThumb }}">
+            <h3 class="meal_name">{{ meals.strMeal }}</h3> 
+            <p hidden>meals.idMeal</p>
+            {% if session['email'] %}
+            <div>
+                <form action="/unfavourites_action" method="POST">
+                    <button type="submit" name="mealid" value="{{ meals.idMeal }}">Unfavourite</button>
+                </form>
+            </div>
+        {% endif %}
+         </div></a>  
+        
+         <p hidden>{{ meals.idMeal }}</p>
+
+         
+    {% endfor %}
+
+    
+
+{% endblock content %}
