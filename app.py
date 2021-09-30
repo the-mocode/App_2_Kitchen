@@ -11,7 +11,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'testkey')
 app = Flask(__name__)
 app.config['SECRET_KEY'] = SECRET_KEY
 
-DB_URL = os.environ.get("DATABASE_URL", "dbname=app2kitchen")
+
 
 @app.route('/')
 def home():
