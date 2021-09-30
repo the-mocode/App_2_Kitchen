@@ -11,6 +11,8 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'testkey')
 app = Flask(__name__)
 app.config['SECRET_KEY'] = SECRET_KEY
 
+DB_URL = os.environ.get("DATABASE_URL", "postgres://adgfjpfjajebur:8509ae5439de02b57e0709b9c9f497b02cc16096fb67f6e71c6e197f438bdc01@ec2-54-209-52-160.compute-1.amazonaws.com:5432/da1qbvpklhjom0")
+
 @app.route('/')
 def home():
     response = requests.get('https://www.themealdb.com/api/json/v1/1/categories.php/')
